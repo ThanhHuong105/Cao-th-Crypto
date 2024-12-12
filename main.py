@@ -5,8 +5,9 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
 
 # Bot Constants
-TOKEN = "7014456931:AAE5R6M9wgfMMyXPYCdogRTISwbaUjSXQRo"
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1QMKiohAaO5QtHoQwBX5efTXCI_Q791A4GnoCe9nMV2w/export?format=csv&sheet=TTCK"
+# Bot Constants
+TOKEN = "8160005798:AAG-IjPvPPO9O5fnxg4LvPM3-4svFufIJEA"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/1EXyL4KwsLZhhzMhNi7d8MMW9qNLIo30i5xR-kOAmTaY/export?format=csv&gid=0"
 
 # States
 QUIZ, WAIT_ANSWER = range(2)
@@ -36,7 +37,7 @@ def start(update: Update, context: CallbackContext):
         return ConversationHandler.END
 
     update.message.reply_text(
-        "🎉 Chào mừng bạn đến với Gameshow 'Ai Là Thiên Tài Đầu Tư’'!\n\n"
+        "🎉 Chào mừng bạn đến với Gameshow 'Ai Là Cao thủ Crypto?’'!\n\n"
         "📜 *Luật chơi:*\n"
         "- Có 20 câu hỏi.\n"
         "- Mỗi câu trả lời đúng được 1 điểm.\n"
@@ -190,14 +191,14 @@ def finish_quiz(update: Update, context: CallbackContext):
     score = user_data.get("score", 0)
 
     if score >= 15:
-        result = "🥇 Nhà đầu tư thiên tài!"
+        result = "🥇 Siêu cao thủ CRYPTO!"
     elif 12 <= score < 15:
-        result = "🥈 Nhà đầu tư tiềm năng!"
+        result = "🥈 Cố tí nữa thôi là siêu cao thủ!"
     else:
-        result = "🥉 Thế giới rất rộng lớn và còn nhiều thứ phải học thêm."
+        result = "🥉 Thế giới crypto rộng lớn và còn nhiều thứ phải học thêm."
 
     update.message.reply_text(
-        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Thiên Tài Đầu Tư’'!*\n\n"
+        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Cao thủ Crypto’'!*\n\n"
         f"🏆 *Tổng điểm của bạn:* {score}/20.\n{result}"
     )
 
