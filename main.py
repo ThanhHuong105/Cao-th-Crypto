@@ -5,8 +5,8 @@ from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
 
 # Bot Constants
-TOKEN = "7014456931:AAE5R6M9wgfMMyXPYCdogRTISwbaUjSXQRo"
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1QMKiohAaO5QtHoQwBX5efTXCI_Q791A4GnoCe9nMV2w/export?format=csv&sheet=TTCK"
+TOKEN = "8160005798:AAG-IjPvPPO9O5fnxg4LvPM3-4svFufIJEA"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/1EXyL4KwsLZhhzMhNi7d8MMW9qNLIo30i5xR-kOAmTaY/export?format=csv&gid=0"
 
 # States
 QUIZ, WAIT_ANSWER = range(2)
