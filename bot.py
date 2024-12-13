@@ -162,7 +162,7 @@ def finish_quiz(update: Update, context: CallbackContext):
         result = "🥉 Thế giới Crypto rất rộng lớn và còn nhiều thứ phải học thêm."
 
     update.message.reply_text(
-        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Siêu Cao Thủ Crypto’'!*\n\n"
+        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Siêu Cao Thủ Crypto?’'*\n\n"
         f"🏆 *Tổng điểm của bạn:* {score}/20.\n{result}"
     )
 
