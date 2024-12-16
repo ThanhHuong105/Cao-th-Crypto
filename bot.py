@@ -20,8 +20,17 @@ def load_questions():
     try:
         data = pd.read_csv(SHEET_URL)
         questions = data.to_dict(orient="records")
-        random.shuffle(questions)
-        return questions[:20]
+
+        # Kiểm tra dữ liệu hợp lệ
+        valid_questions = []
+        for q in questions:
+            if all(k in q for k in ["Question", "Option 1", "Option 2", "Option 3", "Answer"]) and q["Answer"] in [1, 2, 3]:
+                valid_questions.append(q)
+            else:
+                logger.warning(f"Invalid question data: {q}")
+
+        random.shuffle(valid_questions)
+        return valid_questions[:20]
     except Exception as e:
         logger.error(f"Error loading questions: {e}")
         return []
@@ -84,7 +93,6 @@ def ask_question(update: Update, context: CallbackContext):
         # Đặt timeout mới
         timeout_job = context.job_queue.run_once(timeout_handler, 60, context=update.message.chat_id)
         user_data["timeout_job"] = timeout_job
-        return WAIT_ANSWER
     else:
         finish_quiz(update, context)
 
@@ -139,7 +147,7 @@ def handle_answer(update: Update, context: CallbackContext):
         user_answer = int(update.message.text)
     except ValueError:
         update.message.reply_text("⚠️ Vui lòng chọn 1, 2 hoặc 3.")
-        return WAIT_ANSWER
+        return
 
     correct_answer = int(questions[current]["Answer"])
 
