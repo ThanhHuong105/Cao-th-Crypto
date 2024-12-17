@@ -2,7 +2,10 @@ import logging
 import pandas as pd
 import random
 from telegram import Update, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
+from telegram.ext import (
+    Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+)
+from apscheduler.jobstores.base import ConflictingIdError
 
 # Bot Constants
 TOKEN = "8160005798:AAG-IjPvPPO9O5fnxg4LvPM3-4svFufIJEA"
@@ -20,15 +23,10 @@ def load_questions():
     try:
         data = pd.read_csv(SHEET_URL)
         questions = data.to_dict(orient="records")
-
-        # Kiểm tra dữ liệu hợp lệ
         valid_questions = []
         for q in questions:
             if all(k in q for k in ["Question", "Option 1", "Option 2", "Option 3", "Answer"]) and q["Answer"] in [1, 2, 3]:
                 valid_questions.append(q)
-            else:
-                logger.warning(f"Invalid question data: {q}")
-
         random.shuffle(valid_questions)
         return valid_questions[:20]
     except Exception as e:
@@ -74,7 +72,10 @@ def ask_question(update: Update, context: CallbackContext):
 
     # Hủy job timeout cũ nếu tồn tại
     if "timeout_job" in user_data and user_data["timeout_job"] is not None:
-        user_data["timeout_job"].schedule_removal()
+        try:
+            user_data["timeout_job"].remove()
+        except ConflictingIdError:
+            pass
 
     if current < len(questions):
         question = questions[current]
@@ -175,7 +176,7 @@ def finish_quiz(update: Update, context: CallbackContext):
         result = "🥉 Thế giới Crypto rất rộng lớn và còn nhiều thứ phải học thêm."
 
     update.message.reply_text(
-        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Siêu Cao Thủ Crypto'!*\n\n"
+        f"🎉 *Chúc mừng bạn đã hoàn thành cuộc thi 'Ai Là Cao Thủ Crypto'!*\n\n"
         f"🏆 *Tổng điểm của bạn:* {score}/20.\n{result}"
     )
 
@@ -183,6 +184,9 @@ def finish_quiz(update: Update, context: CallbackContext):
 def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
+
+    # Xóa tất cả jobs khi bot khởi động
+    updater.job_queue.scheduler.remove_all_jobs()
 
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("quiz", quiz))
